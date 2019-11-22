@@ -44,6 +44,13 @@ function getServedPath(appPackageJson) {
   const servedUrl =
     envPublicUrl || (publicUrl ? url.parse(publicUrl).pathname : '/');
   return ensureSlash(servedUrl, true);
+} 
+
+// Accept a `includes` property in package.json that is an array of paths
+// to include with babel-loader in webpack.
+function getIncludePaths(appPackageJson) {
+  const { includePaths = [] } = require(appPackageJson);
+  return includePaths.map(includePath => resolveApp(includePath))
 }
 
 const moduleFileExtensions = [
@@ -83,6 +90,7 @@ module.exports = {
   appIndexJs: resolveModule(resolveApp, 'src/index'),
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
+  includePaths: getIncludePaths(resolveApp('package.json')),
   appTsConfig: resolveApp('tsconfig.json'),
   appJsConfig: resolveApp('jsconfig.json'),
   yarnLockFile: resolveApp('yarn.lock'),
@@ -106,6 +114,7 @@ module.exports = {
   appIndexJs: resolveModule(resolveApp, 'src/index'),
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
+  includePaths: getIncludePaths(resolveApp('package.json')),
   appTsConfig: resolveApp('tsconfig.json'),
   appJsConfig: resolveApp('jsconfig.json'),
   yarnLockFile: resolveApp('yarn.lock'),
