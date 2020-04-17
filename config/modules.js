@@ -136,7 +136,17 @@ function getModules() {
   config = config || {};
   const options = config.compilerOptions || {};
 
-  const additionalModulePaths = getAdditionalModulePaths(options);
+  const additionalModulePaths = [
+    ...getAdditionalModulePaths(options),
+    // Use the jsconfig.json in workspaces listed in `includeWorkspaces`
+    ...paths.includeWorkspaces.map(includeWorkspace => {
+      const config = require(path.resolve(includeWorkspace, paths.appJsConfig)) || {};
+      const options = config.compilerOptions || {};
+      const baseUrl = options.baseUrl;
+      const baseUrlResolved = path.resolve(includeWorkspace, baseUrl);
+      return baseUrlResolved;
+    })
+  ];
 
   return {
     additionalModulePaths: additionalModulePaths,

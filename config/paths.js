@@ -36,6 +36,11 @@ function getIncludePaths(appPackageJson) {
   return includePaths.map(includePath => resolveApp(includePath))
 }
 
+function getIncludeWorkspaces(appPackageJson) {
+  const { includeWorkspaces = [] } = require(appPackageJson);
+  return includeWorkspaces.map(includeWorkspace => resolveApp(includeWorkspace));
+}
+
 const moduleFileExtensions = [
   'web.mjs',
   'mjs',
@@ -74,6 +79,7 @@ module.exports = {
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
   includePaths: getIncludePaths(resolveApp('package.json')),
+  includeWorkspaces: getIncludeWorkspaces(resolveApp('package.json')),
   appTsConfig: resolveApp('tsconfig.json'),
   appJsConfig: resolveApp('jsconfig.json'),
   yarnLockFile: resolveApp('yarn.lock'),
@@ -97,6 +103,7 @@ module.exports = {
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
   includePaths: getIncludePaths(resolveApp('package.json')),
+  includeWorkspaces: getIncludeWorkspaces(resolveApp('package.json')),
   appTsConfig: resolveApp('tsconfig.json'),
   appJsConfig: resolveApp('jsconfig.json'),
   yarnLockFile: resolveApp('yarn.lock'),
